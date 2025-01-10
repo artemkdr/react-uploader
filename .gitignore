@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# old git from frontify
+# old git from prev owner
 .gitold
 
 uploads

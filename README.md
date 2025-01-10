@@ -1,6 +1,6 @@
-# Frontify Frontend Live Coding Task
+# Uploader component showcase
 
-Uploading digital assets is one of the core parts of Frontify. The feature must work seamlessly and with a good user
+Uploading digital assets is one of the core parts of the web. The feature must work seamlessly and with a good user
 experience, as thousands of files in many sizes and formats are ingested daily through our web application.
 
 We have been tasked with the creation of a new reusable File Upload React component that meets the following criteria:

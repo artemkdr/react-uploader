@@ -33,7 +33,7 @@ describe('E2E', () => {
     it('should upload a file', async () => {
         const filename = 'hello-single-unchunked.txt';
         const formData = new FormData();
-        formData.append('file', new Blob(['Hello from Frontify!'], { type: 'text/plain' }), filename);
+        formData.append('file', new Blob(['Hello from there!'], { type: 'text/plain' }), filename);
         const promise = await fetch(`http://localhost:${TESTING_PORT}/api/upload-single`, {
             method: 'POST',
             body: formData,
@@ -49,13 +49,13 @@ describe('E2E', () => {
         const content = new TextDecoder().decode(
             new Uint8Array(new Uint8Array(readFileSync(`${TESTING_UPLOADS_DIR}/${filename}`)))
         );
-        expect(content).toBe('Hello from Frontify!');
+        expect(content).toBe('Hello from there!');
     });
 
     it('should upload a "chunked" file (only one chunk)', async () => {
         const filename = 'hello-single-chunk.txt';
         const formData = new FormData();
-        formData.append('file', new Blob(['Hello from Frontify!'], { type: 'text/plain' }), filename);
+        formData.append('file', new Blob(['Hello from there!'], { type: 'text/plain' }), filename);
         formData.append('currentChunkIndex', '0');
         formData.append('totalChunks', '1');
         formData.append('originalName', filename);
@@ -74,12 +74,12 @@ describe('E2E', () => {
         const content = new TextDecoder().decode(
             new Uint8Array(new Uint8Array(readFileSync(`${TESTING_UPLOADS_DIR}/${filename}`)))
         );
-        expect(content).toBe('Hello from Frontify!');
+        expect(content).toBe('Hello from there!');
     });
 
     it('should upload a "chunked" file (multiple chunks)', async () => {
         const filename = 'hello-multiple-chunks.txt';
-        const content = 'Hello from Frontify!';
+        const content = 'Hello from there!';
         const file = new Blob([content], { type: 'text/plain' });
 
         const chunk1 = file.slice(0, content.length / 2);
@@ -119,6 +119,6 @@ describe('E2E', () => {
         const fileContent = new TextDecoder().decode(
             new Uint8Array(new Uint8Array(readFileSync(`${TESTING_UPLOADS_DIR}/${filename}`)))
         );
-        expect(fileContent).toBe('Hello from Frontify!');
+        expect(fileContent).toBe('Hello from there!');
     });
 });
