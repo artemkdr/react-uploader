@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactElement } from 'react';
+import { useCallback, useEffect, useState, type ReactElement } from 'react';
 
 import { ProgressBar } from './features/progress-bar';
 import { Uploader } from './features/uploader';
@@ -9,12 +9,12 @@ import { uploadChunk } from './lib/api/upload-chunk';
 export const App = (): ReactElement => {
     const [files, setFiles] = useState<FileItem[]>([]);
 
-    const sortFiles = (files: FileItem[]): FileItem[] => {
+    const sortFiles = useCallback((files: FileItem[]): FileItem[] => {
         files.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
         return files;
-    }
+    }, []);
 
-    const fetchFiles = async () => {
+    const fetchFiles = useCallback(async () => {
         try {
             const files = await getFilesList();
             const fileItems: FileItem[] =
@@ -25,18 +25,18 @@ export const App = (): ReactElement => {
                             size: file.size,
                             status: 'uploaded',
                         }) as FileItem
-                ) ?? ([] as FileItem[]);            
+                ) ?? ([] as FileItem[]);
             setFiles(sortFiles(fileItems));
         } catch {
             setFiles([] as FileItem[]);
         }
-    };
+    }, [sortFiles, setFiles]);
 
     useEffect(() => {
         // using promise.catch to avoid eslint typescript error for @typescript-eslint/no-floating-promises
         fetchFiles().catch(() => {});
-    }, []);
-// 
+    }, [fetchFiles]);
+    //
     const onUpload = async (file: File, onProgress?: (progress: number) => void) => {
         // build optimistic files list with a newly uploaded file
         const newFileItem = {
@@ -49,7 +49,7 @@ export const App = (): ReactElement => {
         if (existingFileIndex >= 0) {
             tempFiles[existingFileIndex] = newFileItem;
         } else {
-            tempFiles.push(newFileItem);            
+            tempFiles.push(newFileItem);
             sortFiles(tempFiles);
         }
         setFiles(tempFiles);
