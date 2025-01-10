@@ -1,44 +1,17 @@
-import { useCallback, useEffect, useState, type ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { ProgressBar } from './features/progress-bar';
 import { Uploader } from './features/uploader';
 import { type FileItem } from './features/uploader/types/file-item';
-import { getFilesList } from './lib/api/get-files';
+import { getFiles } from './lib/api/get-files';
 import { uploadChunk } from './lib/api/upload-chunk';
+import { useFiles } from './lib/hooks/useFiles';
 
 export const App = (): ReactElement => {
-    const [files, setFiles] = useState<FileItem[]>([]);
+    const mapper = (file: { name: string; size: number }) => ({ ...file, status: 'uploaded' }) as FileItem;
+    const { files, setFiles, sortFiles } = useFiles<FileItem>(getFiles, mapper);
 
-    const sortFiles = useCallback((files: FileItem[]): FileItem[] => {
-        files.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
-        return files;
-    }, []);
-
-    const fetchFiles = useCallback(async () => {
-        try {
-            const files = await getFilesList();
-            const fileItems: FileItem[] =
-                files?.map(
-                    (file) =>
-                        ({
-                            name: file.name,
-                            size: file.size,
-                            status: 'uploaded',
-                        }) as FileItem
-                ) ?? ([] as FileItem[]);
-            setFiles(sortFiles(fileItems));
-        } catch {
-            setFiles([] as FileItem[]);
-        }
-    }, [sortFiles, setFiles]);
-
-    useEffect(() => {
-        // using promise.catch to avoid eslint typescript error for @typescript-eslint/no-floating-promises
-        fetchFiles().catch(() => {});
-    }, [fetchFiles]);
-    //
     const onUpload = async (file: File, onProgress?: (progress: number) => void) => {
-        // build optimistic files list with a newly uploaded file
         const newFileItem = {
             name: file.name,
             size: file.size,
@@ -56,19 +29,22 @@ export const App = (): ReactElement => {
 
         let uploaded = false;
         try {
-            // await uploadSingleFile(file);
             await uploadChunk(file, onProgress);
             uploaded = true;
         } catch {
             setFiles((prevFiles) =>
-                prevFiles.map((fileItem) =>
+                prevFiles?.map((fileItem) =>
                     fileItem.name === newFileItem.name ? { ...fileItem, status: 'failed' } : fileItem
                 )
             );
         }
-        // fetch files only on successful upload
         if (uploaded) {
-            await fetchFiles();
+            try {
+                const files = await getFiles<FileItem>(mapper);
+                setFiles(sortFiles(files));
+            } catch {
+                console.error('Failed to fetch files');
+            }
         }
     };
 
