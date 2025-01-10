@@ -23,18 +23,29 @@ export const FilesList = ({
     statusFailedText = 'Failed',
     statusUploadingText = '...',
 }: FilesListProps): ReactElement<FilesListProps> => {
-    const renderFileStatus = (file: FileListItem, content: ReactElement) => (
-        <li key={file.name} className="whitespace-nowrap flex justify-between">
-            <div className="overflow-hidden text-ellipsis whitespace-nowrap">{content}</div>
-            <div className="text-right ml-2">
-                {file.status === 'uploaded'
-                    ? `${Math.round(file.size / 1024)} kb`
-                    : file.status === 'uploading'
-                      ? statusUploadingText
-                      : statusFailedText}
-            </div>
-        </li>
-    );
+    const renderFileStatus = (file: FileListItem, content: ReactElement) => {
+        let statusClassName = '';
+        switch (file.status) {
+            case 'uploading':
+                statusClassName = 'opacity-70 bg-green-500';
+                break;
+            case 'failed':
+                statusClassName = 'text-red-600';
+                break;
+        }
+        return (
+            <li key={file.name} className={`whitespace-nowrap flex justify-between ${statusClassName}`}>
+                <div className="overflow-hidden text-ellipsis whitespace-nowrap">{content}</div>
+                <div className="text-right ml-2">
+                    {file.status === 'uploaded'
+                        ? `${Math.round(file.size / 1024)} kb`
+                        : file.status === 'uploading'
+                          ? statusUploadingText
+                          : statusFailedText}
+                </div>
+            </li>
+        );
+    };
 
     const filesList = files?.map((file) => {
         switch (file.status) {
@@ -45,12 +56,8 @@ export const FilesList = ({
                         {file.name}
                     </a>
                 );
-            case 'uploading':
-                return renderFileStatus(file, <span className="opacity-50">{file.name}</span>);
-            case 'failed':
-                return renderFileStatus(file, <span className="text-red-600">{file.name}</span>);
             default:
-                return null;
+                return renderFileStatus(file, <span>{file.name}</span>);
         }
     });
 

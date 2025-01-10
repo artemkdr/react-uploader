@@ -3,7 +3,7 @@
  *
  * @template T - The expected type of the response data.
  * @param {string} endpoint - The API endpoint to call.
- * @param {object} [options={}] - The options to pass to the fetch request.
+ * @param {RequestInit} [options={}] - The options to pass to the fetch request.
  * @returns {Promise<{ error: string | undefined; data: T | undefined }>} - A promise that resolves to an object containing either the response data or an error message.
  *
  * @example
@@ -18,27 +18,25 @@
  */
 export const callApi = async <T>(
     endpoint: string,
-    options: object = {}
+    options: RequestInit = {}
 ): Promise<{
     error: string | undefined;
     data: T | undefined;
 }> => {
-    endpoint = `${endpoint}`;
-
-    const data: object = { ...options };
     try {
-        const response = await fetch(endpoint, data);
+        const response = await fetch(endpoint, options);
         if (!response.ok) {
             const json = (await response.json()) as { error: string };
             throw new Error(json?.error);
         }
+        const data = (await response.json()) as T;
         return {
             error: undefined,
-            data: (await response.json()) as T,
+            data,
         };
     } catch (error: unknown) {
         return {
-            error: (error as Error)?.message,
+            error: (error as Error)?.message || 'An unknown API call error occurred',
             data: undefined,
         };
     }

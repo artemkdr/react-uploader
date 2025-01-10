@@ -4,9 +4,9 @@ export const ProgressBar = ({ progress }: { progress: number }) => {
         <div className={`w-full bg-white border border-green-600 ${progress > 0 ? 'visible' : 'invisible'}`}>
             <div
                 className="bg-green-600 text-xs font-light text-white text-center p-0.5 leading-none"
-                style={{ width: `${progress}%` }}
+                style={{ width: `${progress}%`, transition: 'width 0.3s ease-out' }}
             >
-                {Math.floor(progress)}%
+                {progress >= 100 ? 'Uploaded!' : `${Math.floor(progress)}%`}
             </div>
         </div>
     );
