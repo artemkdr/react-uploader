@@ -2,9 +2,15 @@ import { type ReactElement, useState } from 'react';
 
 interface FileUploaderProps {
     onUpload: (file: File) => void;
+    title?: string;
+    buttonLabel?: string;
 }
 
-export const FileUploader = (props: FileUploaderProps): ReactElement<FileUploaderProps> => {
+export const FileUploader = ({
+    title = 'Please select a file to upload',
+    buttonLabel = 'Upload',
+    onUpload    
+}: FileUploaderProps): ReactElement<FileUploaderProps> => {
     const [file, setFile] = useState<File | null>(null);
     const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -16,14 +22,14 @@ export const FileUploader = (props: FileUploaderProps): ReactElement<FileUploade
 
     const fileUploadHandler = () => {
         if (file !== null) {
-            props.onUpload(file);
+            onUpload(file);
         }
     };
 
     return (
         <div className="p-2 flex flex-col items-start space-y-4">
             <h2 className="font-bold" id="file-uploader-heading">
-                Please select a file to upload
+                {title}
             </h2>
             <input
                 type="file"
@@ -38,7 +44,7 @@ export const FileUploader = (props: FileUploaderProps): ReactElement<FileUploade
                 aria-disabled={!file}
                 data-testid="upload-button"
             >
-                Upload
+                {buttonLabel}
             </button>
         </div>
     );

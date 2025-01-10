@@ -5,10 +5,20 @@ import { type FileItem } from '../types/file-item';
 interface FilesListProps {
     files?: FileItem[];
     uploadsUrl?: string;
+    title?: string;
+    emptyListText?: string;
+    statusUploadingText?: string;
+    statusFailedText?: string;
 }
 
-export const FilesList = (props: FilesListProps): ReactElement<FilesListProps> => {
-    const { files, uploadsUrl = '/uploads' } = props; // Set default value here
+export const FilesList = ({
+    files,
+    uploadsUrl = '/uploads',
+    title = 'Uploaded files',
+    emptyListText = 'No files uploaded yet',
+    statusFailedText = 'Failed',
+    statusUploadingText = '...',
+}: FilesListProps): ReactElement<FilesListProps> => {
 
     const renderFileStatus = (file: FileItem, content: ReactElement) => (
         <li key={file.name}>
@@ -17,8 +27,8 @@ export const FilesList = (props: FilesListProps): ReactElement<FilesListProps> =
                 {file.status === 'uploaded'
                     ? `${Math.round(file.size / 1024)} kb`
                     : file.status === 'uploading'
-                      ? '...'
-                      : 'Failed'}
+                      ? statusUploadingText
+                      : statusFailedText}
             </div>
         </li>
     );
@@ -43,11 +53,11 @@ export const FilesList = (props: FilesListProps): ReactElement<FilesListProps> =
 
     return (
         <div className="p-2 flex flex-col items-start space-y-2">
-            <h2 className="font-bold mt-4">Uploaded files</h2>
+            <h2 className="font-bold mt-4">{title}</h2>
             {filesList !== undefined && filesList.length > 0 ? (
                 <ul className="ml-4">{filesList}</ul>
             ) : (
-                <div>No files uploaded yet</div>
+                <div>{emptyListText}</div>
             )}
         </div>
     );

@@ -19,27 +19,26 @@ describe('FileList Component', () => {
         }
     });
 
-    it('displays uploading file', () => {
+    it('displays uploading file with custom status text', () => {
         const files = [{ name: 'file3.txt', size: 0, status: 'uploading' }] as FileItem[];
-        render(<FilesList files={files} />);
-        const filesList = screen.getByRole('list');
-        // expect to show '...' for the uploading file - very simplified test
-        expect(within(filesList).getByText('...')).toBeInTheDocument();
+        render(<FilesList files={files} statusUploadingText='uploading...' />);
+        const filesList = screen.getByRole('list');        
+        expect(within(filesList).getByText('uploading...')).toBeInTheDocument();
     });
 
-    it('displays failed error', () => {
+    it('displays failed error with custom status text', () => {
         const files = [
             { name: 'file1.txt', size: 1024, status: 'uploaded' },
             { name: 'file2.txt', size: 2048, status: 'uploaded' },
             { name: 'file3.txt', size: 0, status: 'failed' },
         ] as FileItem[];
-        render(<FilesList files={files} />);
+        render(<FilesList files={files} statusFailedText='Error' />);
         const filesList = screen.getByRole('list');
-        expect(within(filesList).getByText(/failed/i)).toBeInTheDocument();
+        expect(within(filesList).getByText('Error')).toBeInTheDocument();
     });
 
-    it('displays a message when there are no files', () => {
-        render(<FilesList files={[]} />);
-        expect(screen.getByText('No files uploaded yet')).toBeInTheDocument();
+    it('displays a custom message when there are no files', () => {
+        render(<FilesList files={[]} emptyListText='No uploaded files found!' />);
+        expect(screen.getByText('No uploaded files found!')).toBeInTheDocument();
     });
 });
