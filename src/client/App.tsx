@@ -1,22 +1,35 @@
-import { type ReactElement } from 'react';
+import { useCallback, useEffect, type ReactElement } from 'react';
 
 import { ProgressBar } from './features/progress-bar';
 import { Uploader } from './features/uploader';
-import { type FileItem } from './features/uploader/types/file-item';
-import { getFiles } from './lib/api/get-files';
+import { type FileListItem } from './features/uploader/components/files-list';
 import { uploadChunk } from './lib/api/upload-chunk';
 import { useFiles } from './lib/hooks/useFiles';
 
 export const App = (): ReactElement => {
-    const mapper = (file: { name: string; size: number }) => ({ ...file, status: 'uploaded' }) as FileItem;
-    const { files, setFiles, sortFiles } = useFiles<FileItem>(getFiles, mapper);
+    // useCallback is used to memoize the mapper function
+    // otherwise it would be recreated on each render and it would cause the files to be reloaded infinitely
+    const mapper = useCallback(
+        (file: { name: string; size: number }) => ({ ...file, status: 'uploaded' }) as FileListItem,
+        []
+    );
+    const { files, setFiles, loadFiles, sortFiles } = useFiles<FileListItem>(mapper);
 
+    // load files on App mount
+    useEffect(() => {
+        loadFiles();
+    }, [loadFiles]);
+
+    // handle file upload:
+    // - instatly add file to the list for optimistic update
+    // - upload file
+    // - reload files list on success
     const onUpload = async (file: File, onProgress?: (progress: number) => void) => {
         const newFileItem = {
             name: file.name,
             size: file.size,
             status: 'uploading',
-        } as FileItem;
+        } as FileListItem;
         const tempFiles = [...files];
         const existingFileIndex = tempFiles.findIndex((file) => file.name === newFileItem.name);
         if (existingFileIndex >= 0) {
@@ -39,12 +52,7 @@ export const App = (): ReactElement => {
             );
         }
         if (uploaded) {
-            try {
-                const files = await getFiles<FileItem>(mapper);
-                setFiles(sortFiles(files));
-            } catch {
-                console.error('Failed to fetch files');
-            }
+            loadFiles();
         }
     };
 

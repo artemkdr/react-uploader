@@ -1,9 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { type FileItem } from '../types/file-item';
-
-import { FilesList } from './files-list';
+import { type FileListItem, FilesList } from './files-list';
 import '@testing-library/jest-dom/vitest';
 
 describe('FileList Component', () => {
@@ -11,7 +9,7 @@ describe('FileList Component', () => {
         const files = [
             { name: 'file1.txt', size: 1024, status: 'uploaded' },
             { name: 'file2.txt', size: 2048, status: 'uploaded' },
-        ] as FileItem[];
+        ] as FileListItem[];
         render(<FilesList files={files} />);
         const filesList = screen.getByRole('list');
         for (const file of files) {
@@ -20,7 +18,7 @@ describe('FileList Component', () => {
     });
 
     it('displays uploading file with custom status text', () => {
-        const files = [{ name: 'file3.txt', size: 0, status: 'uploading' }] as FileItem[];
+        const files = [{ name: 'file3.txt', size: 0, status: 'uploading' }] as FileListItem[];
         render(<FilesList files={files} statusUploadingText="uploading..." />);
         const filesList = screen.getByRole('list');
         expect(within(filesList).getByText('uploading...')).toBeInTheDocument();
@@ -31,7 +29,7 @@ describe('FileList Component', () => {
             { name: 'file1.txt', size: 1024, status: 'uploaded' },
             { name: 'file2.txt', size: 2048, status: 'uploaded' },
             { name: 'file3.txt', size: 0, status: 'failed' },
-        ] as FileItem[];
+        ] as FileListItem[];
         render(<FilesList files={files} statusFailedText="Error" />);
         const filesList = screen.getByRole('list');
         expect(within(filesList).getByText('Error')).toBeInTheDocument();

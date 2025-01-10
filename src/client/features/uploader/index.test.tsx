@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import '@testing-library/jest-dom/vitest';
-import { type FileItem } from './types/file-item';
+import { type FileListItem } from './components/files-list';
 
 import { Uploader } from '.';
 
@@ -12,7 +12,7 @@ describe('Uploader component', () => {
             { name: 'file1.txt', size: 1024, status: 'uploaded' },
             { name: 'file2.txt', size: 2048, status: 'uploaded' },
             { name: 'file3.txt', size: 100, status: 'uploaded' },
-        ] as FileItem[];
+        ] as FileListItem[];
         render(<Uploader files={files} onUpload={vi.fn()} />);
         expect(screen.getByTestId('file-input')).toBeInTheDocument();
         expect(screen.getByRole('list')).toBeInTheDocument();
@@ -24,7 +24,7 @@ describe('Uploader component', () => {
             { name: 'file2.txt', size: 2048, status: 'uploaded' },
             { name: 'file3.txt', size: 100, status: 'failed' },
             { name: 'file4.txt', size: 100, status: 'uploading' },
-        ] as FileItem[];
+        ] as FileListItem[];
         render(
             <Uploader
                 files={files}

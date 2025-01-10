@@ -1,9 +1,13 @@
 import { type ReactElement } from 'react';
 
-import { type FileItem } from '../types/file-item';
+export interface FileListItem {
+    name: string;
+    size: number;
+    status: 'uploaded' | 'uploading' | 'failed';
+}
 
 interface FilesListProps {
-    files?: FileItem[];
+    files?: FileListItem[];
     uploadsUrl?: string;
     title?: string;
     emptyListText?: string;
@@ -19,7 +23,7 @@ export const FilesList = ({
     statusFailedText = 'Failed',
     statusUploadingText = '...',
 }: FilesListProps): ReactElement<FilesListProps> => {
-    const renderFileStatus = (file: FileItem, content: ReactElement) => (
+    const renderFileStatus = (file: FileListItem, content: ReactElement) => (
         <li key={file.name} className="whitespace-nowrap flex justify-between">
             <div className="overflow-hidden text-ellipsis whitespace-nowrap">{content}</div>
             <div className="text-right ml-2">
