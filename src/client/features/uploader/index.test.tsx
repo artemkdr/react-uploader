@@ -26,32 +26,27 @@ describe('Uploader component', () => {
             { name: 'file4.txt', size: 100, status: 'uploading' },
         ] as FileItem[];
         render(
-            <Uploader 
-                files={files} 
-                onUpload={vi.fn()} 
-                uploadTitle='Upload a file to the server'
-                uploadButtonLabel='Do it!'
-                listTitle='Uploaded files list:'
-                statusFailedText='Failed to upload'
-                statusUploadingText='processing...'
-                />
-        );        
+            <Uploader
+                files={files}
+                onUpload={vi.fn()}
+                uploadTitle="Upload a file to the server"
+                uploadButtonLabel="Do it!"
+                listTitle="Uploaded files list:"
+                statusFailedText="Failed to upload"
+                statusUploadingText="processing..."
+            />
+        );
         expect(screen.getByRole('button', { name: 'Do it!' })).toBeInTheDocument();
         expect(screen.getByRole('heading', { level: 2, name: 'Upload a file to the server' })).toBeInTheDocument();
         expect(screen.getByRole('heading', { level: 2, name: 'Uploaded files list:' })).toBeInTheDocument();
-        
-        const filesList = screen.getByRole('list'); 
+
+        const filesList = screen.getByRole('list');
         expect(within(filesList).getByText('Failed to upload')).toBeInTheDocument();
         expect(within(filesList).getByText('processing...')).toBeInTheDocument();
     });
 
     it('renders correctly with empty files and custom message', () => {
-        render(
-            <Uploader                 
-                onUpload={vi.fn()} 
-                emptyListText='No files uploaded yet!!!'
-                />
-        ); 
+        render(<Uploader onUpload={vi.fn()} emptyListText="No files uploaded yet!!!" />);
         expect(screen.getByText('No files uploaded yet!!!')).toBeInTheDocument();
     });
 });

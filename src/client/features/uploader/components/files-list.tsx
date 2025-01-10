@@ -19,7 +19,6 @@ export const FilesList = ({
     statusFailedText = 'Failed',
     statusUploadingText = '...',
 }: FilesListProps): ReactElement<FilesListProps> => {
-
     const renderFileStatus = (file: FileItem, content: ReactElement) => (
         <li key={file.name}>
             <div className="inline">{content}</div>

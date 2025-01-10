@@ -9,7 +9,7 @@ interface FileUploaderProps {
 export const FileUploader = ({
     title = 'Please select a file to upload',
     buttonLabel = 'Upload',
-    onUpload    
+    onUpload,
 }: FileUploaderProps): ReactElement<FileUploaderProps> => {
     const [file, setFile] = useState<File | null>(null);
     const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {

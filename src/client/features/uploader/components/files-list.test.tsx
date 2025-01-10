@@ -21,8 +21,8 @@ describe('FileList Component', () => {
 
     it('displays uploading file with custom status text', () => {
         const files = [{ name: 'file3.txt', size: 0, status: 'uploading' }] as FileItem[];
-        render(<FilesList files={files} statusUploadingText='uploading...' />);
-        const filesList = screen.getByRole('list');        
+        render(<FilesList files={files} statusUploadingText="uploading..." />);
+        const filesList = screen.getByRole('list');
         expect(within(filesList).getByText('uploading...')).toBeInTheDocument();
     });
 
@@ -32,13 +32,13 @@ describe('FileList Component', () => {
             { name: 'file2.txt', size: 2048, status: 'uploaded' },
             { name: 'file3.txt', size: 0, status: 'failed' },
         ] as FileItem[];
-        render(<FilesList files={files} statusFailedText='Error' />);
+        render(<FilesList files={files} statusFailedText="Error" />);
         const filesList = screen.getByRole('list');
         expect(within(filesList).getByText('Error')).toBeInTheDocument();
     });
 
     it('displays a custom message when there are no files', () => {
-        render(<FilesList files={[]} emptyListText='No uploaded files found!' />);
+        render(<FilesList files={[]} emptyListText="No uploaded files found!" />);
         expect(screen.getByText('No uploaded files found!')).toBeInTheDocument();
     });
 });

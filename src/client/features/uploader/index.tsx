@@ -7,7 +7,7 @@ import { type FileItem } from './types/file-item';
 interface UploaderProps {
     files?: FileItem[];
     onUpload: (file: File) => void;
-    
+
     // file uploader props
     uploadTitle?: string;
     uploadButtonLabel?: string;
@@ -22,16 +22,14 @@ interface UploaderProps {
 export const Uploader = (props: UploaderProps): ReactElement<UploaderProps> => {
     return (
         <div data-testid="uploader">
-            <FileUploader 
-                onUpload={props.onUpload}
-                title={props.uploadTitle}
-                buttonLabel={props.uploadButtonLabel} />
-            <FilesList 
-                files={props.files} 
-                title={props.listTitle} 
+            <FileUploader onUpload={props.onUpload} title={props.uploadTitle} buttonLabel={props.uploadButtonLabel} />
+            <FilesList
+                files={props.files}
+                title={props.listTitle}
                 emptyListText={props.emptyListText}
                 statusUploadingText={props.statusUploadingText}
-                statusFailedText={props.statusFailedText} />
+                statusFailedText={props.statusFailedText}
+            />
         </div>
     );
 };

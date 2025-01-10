@@ -6,15 +6,15 @@ import '@testing-library/jest-dom/vitest';
 
 describe('FileUploader', () => {
     it('renders correctly with custom title and disabled upload button by default', () => {
-        render(<FileUploader onUpload={vi.fn()} title='Select a file to upload' />);
+        render(<FileUploader onUpload={vi.fn()} title="Select a file to upload" />);
         expect(screen.getByText('Select a file to upload')).toBeInTheDocument();
         expect(screen.getByTestId('file-input')).toBeInTheDocument();
         expect(screen.getByTestId('upload-button')).toBeDisabled();
     });
 
     it('renders correctly with custom upload button label', () => {
-        render(<FileUploader onUpload={vi.fn()} buttonLabel='Upload to the server' />);
-        expect(screen.getByRole('button', { name: 'Upload to the server' })).toBeInTheDocument();        
+        render(<FileUploader onUpload={vi.fn()} buttonLabel="Upload to the server" />);
+        expect(screen.getByRole('button', { name: 'Upload to the server' })).toBeInTheDocument();
     });
 
     it('enables upload button when file is selected', () => {
