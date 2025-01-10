@@ -1,7 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import { FileUploader } from './file-uploader';
+
 import '@testing-library/jest-dom/vitest';
 
 describe('FileUploader', () => {
@@ -26,16 +27,15 @@ describe('FileUploader', () => {
         expect(screen.getByTestId('upload-button')).toBeEnabled();
     });
 
-    it('calls onUpload with the selected file when upload button is clicked', () => {
-        const onUpload = vi.fn();
+    it('calls onUpload with the selected file when upload button is clicked', async () => {
+        const onUpload = vi.fn().mockImplementation(() => Promise.resolve());
         render(<FileUploader onUpload={onUpload} />);
         const fileInput = screen.getByTestId('file-input');
         const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
 
         fireEvent.change(fileInput, { target: { files: [file] } });
-        fireEvent.click(screen.getByTestId('upload-button'));
-
-        expect(onUpload).toHaveBeenCalledWith(file);
+        await act(() => fireEvent.click(screen.getByTestId('upload-button')));
+        expect(onUpload).toHaveBeenCalledWith(file, expect.any(Function));
     });
 
     it('shows an error message when an unsupported file format by extension is selected', () => {

@@ -4,7 +4,7 @@ interface UploadChunksResponse {
     message: string;
 }
 
-export const uploadChunk = async (file: File) => {
+export const uploadChunk = async (file: File, onProgress?: (progress: number) => void) => {
     const CHUNK_SIZE = 1024 * 1024;
     const fileSize = file.size;
     const totalChunks = Math.ceil(fileSize / CHUNK_SIZE);
@@ -26,6 +26,7 @@ export const uploadChunk = async (file: File) => {
         message = response?.data?.message;
         offset += CHUNK_SIZE;
         chunkIndex++;
+        onProgress?.(Math.max(0, Math.min((offset / fileSize) * 100, 100)));
     }
 
     return message;

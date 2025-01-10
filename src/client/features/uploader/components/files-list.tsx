@@ -20,9 +20,9 @@ export const FilesList = ({
     statusUploadingText = '...',
 }: FilesListProps): ReactElement<FilesListProps> => {
     const renderFileStatus = (file: FileItem, content: ReactElement) => (
-        <li key={file.name}>
-            <div className="inline">{content}</div>
-            <div className="inline ml-2">
+        <li key={file.name} className="whitespace-nowrap flex justify-between">
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap">{content}</div>
+            <div className="text-right ml-2">
                 {file.status === 'uploaded'
                     ? `${Math.round(file.size / 1024)} kb`
                     : file.status === 'uploading'
@@ -51,7 +51,7 @@ export const FilesList = ({
     });
 
     return (
-        <div className="p-2 flex flex-col items-start space-y-2">
+        <div className="p-2 flex flex-col space-y-2 w-full">
             <h2 className="font-bold mt-4">{title}</h2>
             {filesList !== undefined && filesList.length > 0 ? (
                 <ul className="ml-4">{filesList}</ul>

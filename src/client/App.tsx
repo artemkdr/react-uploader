@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactElement } from 'react';
 
+import { ProgressBar } from './features/progress-bar';
 import { Uploader } from './features/uploader';
 import { type FileItem } from './features/uploader/types/file-item';
 import { getFilesList } from './lib/api/get-files';
@@ -31,7 +32,7 @@ export const App = (): ReactElement => {
         fetchFiles().catch(() => {});
     }, []);
 
-    const onUpload = async (file: File) => {
+    const onUpload = async (file: File, onProgress?: (progress: number) => void) => {
         // build optimistic files list with a newly uploaded file
         const newFileItem = {
             name: file.name,
@@ -44,14 +45,14 @@ export const App = (): ReactElement => {
             tempFiles[existingFileIndex] = newFileItem;
         } else {
             tempFiles.push(newFileItem);
+            tempFiles.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
         }
-        tempFiles.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
         setFiles(tempFiles);
 
         let uploaded = false;
         try {
             // await uploadSingleFile(file);
-            await uploadChunk(file);
+            await uploadChunk(file, onProgress);
             uploaded = true;
         } catch {
             setFiles((prevFiles) =>
@@ -68,7 +69,13 @@ export const App = (): ReactElement => {
 
     return (
         <main className="relative isolate h-dvh">
-            <Uploader files={files} onUpload={onUpload} />
+            <div className="flex justify-start">
+                <Uploader
+                    files={files}
+                    onUpload={onUpload}
+                    renderProgress={(progress) => <ProgressBar progress={progress} />}
+                />
+            </div>
         </main>
     );
 };

@@ -1,25 +1,31 @@
 import { type ReactElement, useState } from 'react';
 
 interface FileUploaderProps {
-    onUpload: (file: File) => void;
+    onUpload: (file: File, onProgress?: (progress: number) => void) => Promise<void>;
     title?: string;
     accept?: string;
     maxSize?: number;
     buttonLabel?: string;
+    renderProgress?: (progress: number) => ReactElement;
 }
 
 export const FileUploader = ({
     title = 'Please select a file to upload',
     buttonLabel = 'Upload',
     accept = 'image/*,video/*',
-    maxSize = 50 * 1024 * 1024,
+    maxSize = 100 * 1024 * 1024,
     onUpload,
+    renderProgress,
 }: FileUploaderProps): ReactElement<FileUploaderProps> => {
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [progress, setProgress] = useState<number>(0);
+    const [isUploading, setIsUploading] = useState(false);
 
     const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setError(null);
+        setFile(null);
+        setProgress(0);
         const file = event.target.files?.[0];
         if (!file) {
             return;
@@ -55,7 +61,16 @@ export const FileUploader = ({
 
     const fileUploadHandler = () => {
         if (file !== null) {
-            onUpload(file);
+            setIsUploading(true);
+            onUpload(file, (progress: number) => {
+                setProgress(progress);
+            })
+                .catch(() => {
+                    setError('An error occurred while uploading the file');
+                })
+                .finally(() => {
+                    setIsUploading(false);
+                });
         }
     };
 
@@ -69,6 +84,8 @@ export const FileUploader = ({
                 accept={accept}
                 onChange={fileChangeHandler}
                 aria-labelledby="file-uploader-heading"
+                disabled={isUploading}
+                aria-disabled={isUploading}
                 data-testid="file-input"
             />
             {error !== null && (
@@ -79,12 +96,13 @@ export const FileUploader = ({
             <button
                 className="border-black border pl-4 pr-4 pt-1 pb-1"
                 onClick={fileUploadHandler}
-                disabled={!file}
-                aria-disabled={!file}
+                disabled={isUploading || !file}
+                aria-disabled={isUploading || !file}
                 data-testid="upload-button"
             >
                 {buttonLabel}
             </button>
+            {renderProgress && <>{renderProgress(progress)}</>}
         </div>
     );
 };
