@@ -9,6 +9,11 @@ import { uploadChunk } from './lib/api/upload-chunk';
 export const App = (): ReactElement => {
     const [files, setFiles] = useState<FileItem[]>([]);
 
+    const sortFiles = (files: FileItem[]): FileItem[] => {
+        files.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
+        return files;
+    }
+
     const fetchFiles = async () => {
         try {
             const files = await getFilesList();
@@ -20,8 +25,8 @@ export const App = (): ReactElement => {
                             size: file.size,
                             status: 'uploaded',
                         }) as FileItem
-                ) ?? ([] as FileItem[]);
-            setFiles(fileItems);
+                ) ?? ([] as FileItem[]);            
+            setFiles(sortFiles(fileItems));
         } catch {
             setFiles([] as FileItem[]);
         }
@@ -31,7 +36,7 @@ export const App = (): ReactElement => {
         // using promise.catch to avoid eslint typescript error for @typescript-eslint/no-floating-promises
         fetchFiles().catch(() => {});
     }, []);
-
+// 
     const onUpload = async (file: File, onProgress?: (progress: number) => void) => {
         // build optimistic files list with a newly uploaded file
         const newFileItem = {
@@ -44,8 +49,8 @@ export const App = (): ReactElement => {
         if (existingFileIndex >= 0) {
             tempFiles[existingFileIndex] = newFileItem;
         } else {
-            tempFiles.push(newFileItem);
-            tempFiles.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
+            tempFiles.push(newFileItem);            
+            sortFiles(tempFiles);
         }
         setFiles(tempFiles);
 
