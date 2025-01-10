@@ -37,4 +37,37 @@ describe('FileUploader', () => {
 
         expect(onUpload).toHaveBeenCalledWith(file);
     });
+
+    it('shows an error message when an unsupported file format by extension is selected', () => {
+        render(<FileUploader onUpload={vi.fn()} accept=".jpg,.jpeg,.png" />);
+        const fileInput = screen.getByTestId('file-input');
+        const file = new File(['dummy content'], 'example.txt', { type: 'text/plain' });
+
+        fireEvent.change(fileInput, { target: { files: [file] } });
+
+        expect(screen.getByTestId('error-message')).toHaveTextContent('File format not accepted');
+        expect(screen.getByTestId('upload-button')).toBeDisabled();
+    });
+
+    it('shows an error message when an unsupported file format by type is selected', () => {
+        render(<FileUploader onUpload={vi.fn()} accept="image/*,video/*" />);
+        const fileInput = screen.getByTestId('file-input');
+        const file = new File(['dummy content'], 'example.txt', { type: 'text/plain' });
+
+        fireEvent.change(fileInput, { target: { files: [file] } });
+
+        expect(screen.getByTestId('error-message')).toHaveTextContent('File format not accepted');
+        expect(screen.getByTestId('upload-button')).toBeDisabled();
+    });
+
+    it('shows an error message when the selected file exceeds the maximum size', () => {
+        render(<FileUploader onUpload={vi.fn()} maxSize={1024 * 1024} />);
+        const fileInput = screen.getByTestId('file-input');
+        const file = new File(['a'.repeat(1024 * 1024 + 1)], 'example.png', { type: 'image/png' });
+
+        fireEvent.change(fileInput, { target: { files: [file] } });
+
+        expect(screen.getByTestId('error-message')).toHaveTextContent('File size exceeds the limit of 1 MB');
+        expect(screen.getByTestId('upload-button')).toBeDisabled();
+    });
 });
