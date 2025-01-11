@@ -1,28 +1,28 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import { type FileListItem } from '../../features/uploader/components/files-list';
-import { getFiles } from '../api/get-files';
-import { uploadChunk } from '../api/upload-chunk';
-import { uploadSingleFile } from '../api/upload-single-file';
+import { getFiles } from '../../../lib/api/get-files';
+import { uploadChunk } from '../../../lib/api/upload-chunk';
+import { uploadSingleFile } from '../../../lib/api/upload-single-file';
+import { type CustomFileItem } from '../types/custom-file-item';
 
 /**
- * Custom hook to manage and sort files as a list of FileListItem objects.
+ * Custom hook to manage and sort files as a list of CustomFileItem objects.
  *
  * @returns {object} An object containing:
- * - `files`: The list of FileListItem objects.
+ * - `files`: The list of CustomFileItem objects.
  * - `setFiles`: sets the list of files.
  * - `sortFiles`: sorts the files by name.
  * - `loadFiles`: loads files from the server API, sorts them and sets files.
  */
 export const useFilesAPI = (uploadType?: 'single' | 'chunk') => {
-    const [files, setFiles] = useState<FileListItem[]>([]);
+    const [files, setFiles] = useState<CustomFileItem[]>([]);
 
     const sortFiles = useCallback(<B extends { name: string }>(files: B[]): B[] => {
         return files.sort((a, b) => (a.name?.toLowerCase() <= b.name?.toLowerCase() ? -1 : 1));
     }, []);
 
     const loadFiles = useCallback(() => {
-        getFiles<FileListItem>((file) => ({ ...file, status: 'uploaded' }))
+        getFiles<CustomFileItem>((file) => ({ ...file, status: 'uploaded' }))
             .then((files) => {
                 setFiles(sortFiles(files));
             })
@@ -44,7 +44,7 @@ export const useFilesAPI = (uploadType?: 'single' | 'chunk') => {
             name: file.name,
             size: file.size,
             status: 'uploading',
-        } as FileListItem;
+        } as CustomFileItem;
         setFiles((prevFiles) => {
             const tempFiles = [...prevFiles];
             const existingFileIndex = tempFiles.findIndex((f) => f.name === newFileItem.name);
