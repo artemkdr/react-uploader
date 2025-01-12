@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { type FileListItem, FilesList } from './files-list';
+import { type FileListItem, FileList } from '.';
 import '@testing-library/jest-dom/vitest';
 
 describe('FileList Component', () => {
@@ -10,7 +10,7 @@ describe('FileList Component', () => {
             { name: 'file1.txt', size: 1024 },
             { name: 'file2.txt', size: 2048 },
         ] as FileListItem[];
-        render(<FilesList files={files} />);
+        render(<FileList files={files} />);
         const filesList = screen.getByRole('list');
         for (const file of files) {
             expect(within(filesList).getByText(file.name, { exact: false })).toBeInTheDocument();
@@ -18,17 +18,17 @@ describe('FileList Component', () => {
     });
 
     it('displays a custom message when there are no files', () => {
-        render(<FilesList files={[]} emptyListText="No uploaded files found!" />);
+        render(<FileList files={[]} emptyListText="No uploaded files found!" />);
         expect(screen.getByText('No uploaded files found!')).toBeInTheDocument();
     });
 
     it('renders the default title', () => {
-        render(<FilesList files={[]} />);
+        render(<FileList files={[]} />);
         expect(screen.getByText('Uploaded files')).toBeInTheDocument();
     });
 
     it('renders a custom title', () => {
-        render(<FilesList files={[]} title="My Files" />);
+        render(<FileList files={[]} title="My Files" />);
         expect(screen.getByText('My Files')).toBeInTheDocument();
     });
 
@@ -37,8 +37,10 @@ describe('FileList Component', () => {
             { name: 'file1.txt', size: 1024 },
             { name: 'file2.txt', size: 2048 },
         ] as FileListItem[];
-        const renderFileItem = (file: FileListItem) => <li key={file.name}>{`${file.name} (${file.size} bytes)`}</li>;
-        render(<FilesList files={files} renderFileItem={renderFileItem} />);
+        const CustomFileItem = ({ file }: { file: FileListItem }) => (
+            <li key={file.name}>{`${file.name} (${file.size} bytes)`}</li>
+        );
+        render(<FileList files={files} fileListComponent={CustomFileItem} />);
         const filesList = screen.getByRole('list');
         for (const file of files) {
             expect(within(filesList).getByText(`${file.name} (${file.size} bytes)`)).toBeInTheDocument();

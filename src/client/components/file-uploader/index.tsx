@@ -7,8 +7,31 @@ interface FileUploaderProps {
     maxSize?: number;
     buttonLabel?: string;
     renderProgress?: (progress: number) => ReactElement;
+    className?: string;
+    headerClassName?: string;
+    buttonClassName?: string;
+    inputClassName?: string;
+    errorClassName?: string;
 }
 
+/**
+ * FileUploader component that handles file uploads.
+ *
+ * @component
+ * @param {object} props - The props for the FileUploader component.
+ * @param {(file: File, onProgress?: (progress: number) => void) => Promise<void>} props.onUpload - Handler for file upload.
+ * @param {string} [props.title="Please select a file to upload"] - Title for the file uploader section.
+ * @param {string} [props.accept="image/*,video/*"] - Accepted file types for upload: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept.
+ * @param {number} [props.maxSize=100 * 1024 * 1024] - Maximum file size allowed for upload.
+ * @param {string} [props.buttonLabel="Upload"] - Label for the upload button.
+ * @param {(progress: number) => ReactElement} [props.renderProgress] - Function to render upload progress.
+ * @param {string} [props.className=""] - Additional classes for the FileUploader component container.
+ * @param {string} [props.headerClassName=""] - Additional classes for the title.
+ * @param {string} [props.buttonClassName=""] - Additional classes for the upload button.
+ * @param {string} [props.inputClassName=""] - Additional classes for the file input.
+ * @param {string} [props.errorClassName=""] - Additional classes for the error message.
+ * @returns {ReactElement<FileUploaderProps>} The FileUploader component.
+ */
 export const FileUploader = ({
     title = 'Please select a file to upload',
     buttonLabel = 'Upload',
@@ -16,6 +39,11 @@ export const FileUploader = ({
     maxSize = 100 * 1024 * 1024,
     onUpload,
     renderProgress,
+    className = '',
+    headerClassName = '',
+    buttonClassName = '',
+    inputClassName = '',
+    errorClassName = '',
 }: FileUploaderProps): ReactElement<FileUploaderProps> => {
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -75,8 +103,8 @@ export const FileUploader = ({
     };
 
     return (
-        <div className="p-2 flex flex-col items-start space-y-4">
-            <h2 className="font-bold" id="file-uploader-heading">
+        <div className={`p-2 flex flex-col items-start space-y-4 ${className}`}>
+            <h2 className={`font-bold ${headerClassName}`} id="file-uploader-heading">
                 {title}
             </h2>
             <input
@@ -87,14 +115,15 @@ export const FileUploader = ({
                 disabled={isUploading}
                 aria-disabled={isUploading}
                 data-testid="file-input"
+                className={`${inputClassName}`}
             />
             {error !== null && (
-                <div className="text-red-500" data-testid="error-message">
+                <div className={`text-red-500 ${errorClassName}`} data-testid="error-message">
                     {error}
                 </div>
             )}
             <button
-                className="border-black border pl-4 pr-4 pt-1 pb-1"
+                className={`border-black border pl-4 pr-4 pt-1 pb-1 ${buttonClassName}`}
                 onClick={fileUploadHandler}
                 disabled={isUploading || !file}
                 aria-disabled={isUploading || !file}

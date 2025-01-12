@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { FileUploader } from './file-uploader';
+import { FileUploader } from '.';
 
 import '@testing-library/jest-dom/vitest';
 

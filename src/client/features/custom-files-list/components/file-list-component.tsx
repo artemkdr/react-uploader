@@ -2,7 +2,7 @@ import { type ReactElement } from 'react';
 
 import { type CustomFileItem } from '../types/custom-file-item';
 
-export const renderFileItem = (file: CustomFileItem): ReactElement => {
+export const FileListComponent = ({ file }: { file: CustomFileItem }): ReactElement => {
     const uploadsUrl = '/uploads';
     const statusFailedText = 'Failed';
     const statusUploadingText = '...';

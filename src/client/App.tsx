@@ -1,11 +1,11 @@
 import { type ReactElement } from 'react';
 
-import { renderFileItem } from './features/custom-files-list/components/render-file-item';
+import { FileList } from './components/file-list';
+import { FileUploader } from './components/file-uploader';
+import { ProgressBar } from './components/progress-bar';
+import { FileListComponent } from './features/custom-files-list/components/file-list-component';
 import { useFilesAPI } from './features/custom-files-list/hooks/useFiles';
 import { type CustomFileItem } from './features/custom-files-list/types/custom-file-item';
-import { ProgressBar } from './features/progress-bar';
-import { Uploader } from './features/uploader';
-import { type FileListItem } from './features/uploader/components/files-list';
 
 export const App = (): ReactElement => {
     const uploadType: 'chunk' | 'single' = 'chunk';
@@ -14,13 +14,15 @@ export const App = (): ReactElement => {
     return (
         <main className="relative isolate h-dvh">
             <div className="flex justify-start">
-                <Uploader<CustomFileItem>
-                    files={files}
-                    onUpload={uploadFile}
-                    maxSize={(uploadType as 'chunk' | 'single') === 'chunk' ? 100 * 1024 * 1024 : 5 * 1024 * 1024}
-                    renderProgress={(progress) => <ProgressBar progress={progress} />}
-                    renderFileItem={renderFileItem as (file: FileListItem) => ReactElement}
-                />
+                <div data-testid="uploader" className="max-w-[500px] min-w-[300px] flex flex-col">
+                    <FileUploader
+                        onUpload={uploadFile}
+                        accept="image/*,video/*"
+                        maxSize={(uploadType as 'chunk' | 'single') === 'chunk' ? 100 * 1024 * 1024 : 5 * 1024 * 1024}
+                        renderProgress={(progress) => <ProgressBar progress={progress} />}
+                    />
+                    <FileList<CustomFileItem> files={files} fileListComponent={FileListComponent} />
+                </div>
             </div>
         </main>
     );
