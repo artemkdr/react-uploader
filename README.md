@@ -1,6 +1,6 @@
 # Uploader component showcase
 
-This simple application shows reusable FileUploader and FileList React components with the following functionality:
+This simple application shows reusable [FileUploader](/src/client/components/file-uploader/index.tsx), [ProgressBar](/src/client/components/progress-bar/index.tsx) and [FileList](/src/client/components/file-list/index.tsx) React components with the following functionality:
 - allows uploading and listing existing files through an existing Http API (express server in `src/server` folder),
 - designed to be easily extended,
 - shows the list of uploaded files
