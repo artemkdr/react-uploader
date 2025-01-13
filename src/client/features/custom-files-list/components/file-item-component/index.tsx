@@ -11,7 +11,7 @@ interface FileItemComponentProps {
     uploadingClassName?: string;
 }
 
-export const FileItemComponent = forwardRef<HTMLLIElement, FileItemComponentProps>(
+export const FileItemComponent = forwardRef<HTMLLIElement | null, FileItemComponentProps>(
     (
         {
             file,

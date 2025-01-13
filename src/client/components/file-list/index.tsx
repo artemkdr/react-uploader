@@ -25,7 +25,7 @@ interface FileListProps<T extends FileListItem = FileListItem> {
  * @param {T[]} [props.files] - List of files to be displayed.
  * @param {string} [props.title='Uploaded files'] - Title for the file list.
  * @param {string} [props.emptyListText='No files uploaded yet'] - Text to display when the file list is empty.
- * @param {ComponentType<{ file: T }>} [props.fileListComponent] - Custom component for a file item.
+ * @param {ComponentType<{ file: T }>} [props.fileItemComponent] - Custom component for a file item.
  * @param {string} [props.className=''] - Additional classes for the FileList component container.
  * @param {string} [props.headerClassName=''] - Additional classes for the file list header.
  * @param {string} [props.listClassName=''] - Additional classes for the file list.

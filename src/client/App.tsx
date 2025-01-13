@@ -5,6 +5,7 @@ import { FileUploader } from './components/file-uploader';
 import { ProgressBar } from './components/progress-bar';
 import { FileItemComponent } from './features/custom-files-list/components/file-item-component';
 import { useFilesAPI } from './features/custom-files-list/hooks/useFiles';
+import { type CustomFileItem } from './features/custom-files-list/types/custom-file-item';
 
 export const App = (): ReactElement => {
     const uploadType: 'chunk' | 'single' = 'chunk';
@@ -31,7 +32,7 @@ export const App = (): ReactElement => {
                     />
                     <FileList
                         files={files}
-                        fileItemComponent={FileItemComponent as ComponentType<{ file: FileListItem }>}
+                        fileItemComponent={FileItemComponent as ComponentType<{ file: FileListItem | CustomFileItem }>}
                         className="p-2 flex flex-col space-y-2 w-full mt-4"
                         listClassName="ml-4"
                     />
