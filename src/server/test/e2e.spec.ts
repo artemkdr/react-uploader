@@ -24,7 +24,7 @@ describe('E2E', () => {
 
     it('should list the available files', async () => {
         const promise = await fetch(`http://localhost:${TESTING_PORT}/api/files`);
-        const data = await promise.json();        
+        const data = await promise.json();
         expect(promise).toHaveProperty('status', 200);
         expect(data).toHaveProperty('files');
     });
@@ -37,7 +37,7 @@ describe('E2E', () => {
             method: 'POST',
             body: formData,
         });
-        const data = await promise.json();        
+        const data = await promise.json();
         expect(promise).toHaveProperty('status', 200);
         expect(data).toHaveProperty('message', 'File uploaded successfully');
 

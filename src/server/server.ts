@@ -37,7 +37,7 @@ const mergeChunks = async (fileName: string, totalChunks: number) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/api/upload-single', upload.single('file'), async (req, res) => {    
+app.post('/api/upload-single', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'Missing required `file` key in body.' });
     }
