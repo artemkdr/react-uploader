@@ -40,7 +40,7 @@ describe('FileList Component', () => {
         const CustomFileItem = ({ file }: { file: FileListItem }) => (
             <li key={file.name}>{`${file.name} (${file.size} bytes)`}</li>
         );
-        render(<FileList files={files} fileListComponent={CustomFileItem} />);
+        render(<FileList files={files} fileItemComponent={CustomFileItem} />);
         const filesList = screen.getByRole('list');
         for (const file of files) {
             expect(within(filesList).getByText(`${file.name} (${file.size} bytes)`)).toBeInTheDocument();

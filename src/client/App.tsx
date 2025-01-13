@@ -1,11 +1,10 @@
-import { type ReactElement } from 'react';
+import { type ComponentType, type ReactElement } from 'react';
 
-import { FileList } from './components/file-list';
+import { FileList, type FileListItem } from './components/file-list';
 import { FileUploader } from './components/file-uploader';
 import { ProgressBar } from './components/progress-bar';
-import { FileListComponent } from './features/custom-files-list/components/file-list-component';
+import { FileItemComponent } from './features/custom-files-list/components/file-item-component';
 import { useFilesAPI } from './features/custom-files-list/hooks/useFiles';
-import { type CustomFileItem } from './features/custom-files-list/types/custom-file-item';
 
 export const App = (): ReactElement => {
     const uploadType: 'chunk' | 'single' = 'chunk';
@@ -19,9 +18,23 @@ export const App = (): ReactElement => {
                         onUpload={uploadFile}
                         accept="image/*,video/*"
                         maxSize={(uploadType as 'chunk' | 'single') === 'chunk' ? 100 * 1024 * 1024 : 5 * 1024 * 1024}
-                        renderProgress={(progress) => <ProgressBar progress={progress} />}
+                        className="p-2 flex flex-col items-start space-y-4"
+                        errorClassName="text-red-500"
+                        buttonClassName="border-black border pl-4 pr-4 pt-1 pb-1 bg-white hover:bg-gray-100"
+                        renderProgress={(progress) => (
+                            <ProgressBar
+                                outerClassName="w-full bg-white border border-green-600"
+                                innerClassName="bg-gradient-to-r from-green-600/50 to-green-600 text-xs font-light text-white text-center p-0.5 leading-none"
+                                progress={progress}
+                            />
+                        )}
                     />
-                    <FileList<CustomFileItem> files={files} fileListComponent={FileListComponent} />
+                    <FileList
+                        files={files}
+                        fileItemComponent={FileItemComponent as ComponentType<{ file: FileListItem }>}
+                        className="p-2 flex flex-col space-y-2 w-full mt-4"
+                        listClassName="ml-4"
+                    />
                 </div>
             </div>
         </main>

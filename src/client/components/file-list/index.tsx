@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactElement } from 'react';
+import { type ForwardedRef, forwardRef, type ComponentType } from 'react';
 
 export interface FileListItem {
     name: string;
@@ -9,7 +9,7 @@ interface FileListProps<T extends FileListItem = FileListItem> {
     files?: T[];
     title?: string;
     emptyListText?: string;
-    fileListComponent?: ComponentType<{ file: T }>;
+    fileItemComponent?: ComponentType<{ file: T }>;
     className?: string;
     headerClassName?: string;
     listClassName?: string;
@@ -30,34 +30,40 @@ interface FileListProps<T extends FileListItem = FileListItem> {
  * @param {string} [props.headerClassName=''] - Additional classes for the file list header.
  * @param {string} [props.listClassName=''] - Additional classes for the file list.
  * @param {string} [props.emptyListClassName=''] - Additional classes for the empty list text. *
- * @returns {ReactElement<FileListProps>} The FileList component.
  */
-export const FileList = <T extends FileListItem = FileListItem>({
-    files,
-    title = 'Uploaded files',
-    emptyListText = 'No files uploaded yet',
-    fileListComponent: FileListComponent,
-    className = '',
-    headerClassName = '',
-    listClassName = '',
-    emptyListClassName = '',
-}: FileListProps<T>): ReactElement => {
-    const fileList = files?.map((file) => {
-        if (FileListComponent) {
-            return <FileListComponent key={file.name} file={file} />;
-        } else {
-            return <li key={file.name}>{`${file.name} - ${Math.round(file.size / 1024)}kb`}</li>;
-        }
-    });
 
-    return (
-        <div className={`p-2 flex flex-col space-y-2 w-full ${className}`}>
-            <h2 className={`font-bold mt-4 ${headerClassName}`}>{title}</h2>
-            {fileList !== undefined && fileList.length > 0 ? (
-                <ul className={`ml-4 ${listClassName}`}>{fileList}</ul>
-            ) : (
-                <div className={`${emptyListClassName}`}>{emptyListText}</div>
-            )}
-        </div>
-    );
-};
+export const FileList = forwardRef(
+    <T extends FileListItem = FileListItem>(
+        {
+            files,
+            title = 'Uploaded files',
+            emptyListText = 'No files uploaded yet',
+            fileItemComponent: FileItemComponent,
+            className = '',
+            headerClassName = '',
+            listClassName = '',
+            emptyListClassName = '',
+        }: FileListProps<T>,
+        ref: ForwardedRef<HTMLDivElement>
+    ) => {
+        const fileList = files?.map((file) => {
+            if (FileItemComponent) {
+                return <FileItemComponent key={file.name} file={file} />;
+            } else {
+                return <li key={file.name}>{`${file.name} - ${Math.round(file.size / 1024)}kb`}</li>;
+            }
+        });
+
+        return (
+            <div ref={ref} className={className}>
+                <h2 className={headerClassName}>{title}</h2>
+                {fileList !== undefined && fileList.length > 0 ? (
+                    <ul className={listClassName}>{fileList}</ul>
+                ) : (
+                    <div className={emptyListClassName}>{emptyListText}</div>
+                )}
+            </div>
+        );
+    }
+);
+FileList.displayName = 'FileList';

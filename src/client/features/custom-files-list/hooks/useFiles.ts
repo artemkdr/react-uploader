@@ -8,6 +8,8 @@ import { type CustomFileItem } from '../types/custom-file-item';
 /**
  * Custom hook to manage and sort files as a list of CustomFileItem objects.
  *
+ * @param {'single' | 'chunk'} [uploadType] - The type of file upload.
+ * 
  * @returns {object} An object containing:
  * - `files`: The list of CustomFileItem objects.
  * - `setFiles`: sets the list of files.

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+h2 { font-weight: bold;}
+
 button[disabled] {
     cursor: not-allowed;
     opacity: 0.1;
