@@ -24,8 +24,7 @@ describe('E2E', () => {
 
     it('should list the available files', async () => {
         const promise = await fetch(`http://localhost:${TESTING_PORT}/api/files`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data = await promise.json();
+        const data = await promise.json();        
         expect(promise).toHaveProperty('status', 200);
         expect(data).toHaveProperty('files');
     });
@@ -38,8 +37,7 @@ describe('E2E', () => {
             method: 'POST',
             body: formData,
         });
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data = await promise.json();
+        const data = await promise.json();        
         expect(promise).toHaveProperty('status', 200);
         expect(data).toHaveProperty('message', 'File uploaded successfully');
 
@@ -63,7 +61,6 @@ describe('E2E', () => {
             method: 'POST',
             body: formData,
         });
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data = await promise.json();
         expect(promise).toHaveProperty('status', 200);
         expect(data).toHaveProperty('message', 'Chunked file uploaded successfully');
@@ -94,7 +91,6 @@ describe('E2E', () => {
             body: formData1,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data1 = await promise1.json();
         expect(promise1).toHaveProperty('status', 200);
         expect(data1).toHaveProperty('message', 'Chunked file uploaded successfully');
@@ -108,7 +104,6 @@ describe('E2E', () => {
             body: formData2,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data2 = await promise2.json();
         expect(promise2).toHaveProperty('status', 200);
         expect(data2).toHaveProperty('message', 'Chunked file uploaded successfully');

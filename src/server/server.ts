@@ -37,8 +37,7 @@ const mergeChunks = async (fileName: string, totalChunks: number) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.post('/api/upload-single', upload.single('file'), async (req, res) => {
+app.post('/api/upload-single', upload.single('file'), async (req, res) => {    
     if (!req.file) {
         return res.status(400).json({ error: 'Missing required `file` key in body.' });
     }
@@ -59,7 +58,6 @@ app.post('/api/upload-single', upload.single('file'), async (req, res) => {
 app.post(
     '/api/upload-chunk',
     upload.single('file'),
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     async (req: CustomRequest<{ currentChunkIndex: number; totalChunks: number }>, res: Response) => {
         if (!req.file || !('currentChunkIndex' in req.body) || !('totalChunks' in req.body)) {
             return res.status(400).json({ error: 'Missing required parameters' });
@@ -97,7 +95,6 @@ app.post(
     }
 );
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.get('/api/files', async (_req, res) => {
     try {
         const fileNames = await readdir(UPLOAD_DIR);

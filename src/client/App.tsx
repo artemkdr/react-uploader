@@ -10,7 +10,6 @@ import { type CustomFileItem } from './features/custom-files-list/types/custom-f
 export const App = (): ReactElement => {
     const uploadType: 'chunk' | 'single' = 'chunk';
     const { files, uploadFile } = useFilesAPI(uploadType);
-
     return (
         <main className="relative isolate h-dvh">
             <div className="flex justify-start">
