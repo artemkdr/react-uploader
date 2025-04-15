@@ -12,9 +12,7 @@ import { type CustomFileItem } from '../types/custom-file-item';
  *
  * @returns {object} An object containing:
  * - `files`: The list of CustomFileItem objects.
- * - `setFiles`: sets the list of files.
- * - `sortFiles`: sorts the files by name.
- * - `loadFiles`: loads files from the server API, sorts them and sets files.
+ * - `uploadFile`: The function accepting File object to upload and `onProgress(progress: number)` handler.
  */
 export const useFilesAPI = (uploadType?: 'single' | 'chunk') => {
     const [files, setFiles] = useState<CustomFileItem[]>([]);
