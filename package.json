@@ -20,7 +20,7 @@
         "multer": "^2.0.0-rc.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "vite-express": "^0.20.0"
+        "vite-express": "^0.21.1"
     },
     "devDependencies": {
         "@testing-library/dom": "^10.4.0",
