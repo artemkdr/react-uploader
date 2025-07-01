@@ -14,7 +14,7 @@
         "test:client": "vitest src/client"
     },
     "dependencies": {
-        "body-parser": "^1.20.2",
+        "body-parser": "^2.2.0",
         "express": "^4.21.2",
         "globals": "^15.14.0",
         "multer": "^3.0.0-alpha.1",
