@@ -16,7 +16,7 @@
     "dependencies": {
         "body-parser": "^2.2.0",
         "express": "^5.1.0",
-        "globals": "^15.14.0",
+        "globals": "^16.3.0",
         "multer": "^3.0.0-alpha.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
